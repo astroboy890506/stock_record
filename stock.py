@@ -23,7 +23,7 @@ def main():
 
     # Input form for trading data
     with st.form("trading_form"):
-        col1, col2, col3 = st.beta_columns(3)
+        col1, col2, col3 = st.columns(3)
 
         year = col1.text_input("Year of Trading")
         date = col2.date_input("Date")
