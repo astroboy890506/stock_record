@@ -64,7 +64,35 @@ def main():
     if len(st.session_state.trading_data) > 0:
         st.dataframe(st.session_state.trading_data, width=800)
 
-    # ... Rest of the code ...
+     # Perform operations on data
+    if st.button("Edit"):
+        selected_index = st.number_input("Enter the index to edit", value=0, min_value=0, max_value=len(st.session_state.trading_data)-1)
+        if selected_index >= 0 and selected_index < len(st.session_state.trading_data):
+            st.session_state.trading_data.loc[selected_index, "Year"] = st.text_input("Year", st.session_state.trading_data.loc[selected_index, "Year"])
+            # ... repeat for other columns ...
+
+    if st.button("Append"):
+        new_entry = {}
+        new_entry["Year"] = st.text_input("Year")
+        new_entry["Date"] = st.date_input("Date")
+        new_entry["Stock Name"] = st.text_input("Stock Name")
+        new_entry["Price Enter"] = st.number_input("Price Enter", step=0.01, format="%.2f")
+        new_entry["Enter Unit"] = st.number_input("Enter Unit", step=1, min_value=1)
+        new_entry["Exit Date"] = st.date_input("Exit Date")
+        new_entry["Exit Price"] = st.number_input("Exit Price", step=0.01, format="%.2f")
+        new_entry["Exit Unit"] = st.number_input("Exit Unit", step=1, min_value=1)
+        new_entry["Cost"] = new_entry["Price Enter"] * new_entry["Enter Unit"]
+        new_entry["Realize Gain/Loss"] = (new_entry["Exit Price"] * new_entry["Exit Unit"]) - new_entry["Cost"]
+        st.session_state.trading_data = pd.concat([st.session_state.trading_data, pd.DataFrame([new_entry])], ignore_index=True)
+
+    if st.button("Remove"):
+        selected_index = st.number_input("Enter the index to remove", value=0, min_value=0, max_value=len(st.session_state.trading_data)-1)
+        if selected_index >= 0 and selected_index < len(st.session_state.trading_data):
+            st.session_state.trading_data.drop(selected_index, inplace=True)
+            st.session_state.trading_data.reset_index(drop=True, inplace=True)
+
+if __name__ == "__main__":
+    main()
 
 if __name__ == "__main__":
     main()
