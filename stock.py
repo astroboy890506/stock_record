@@ -36,38 +36,40 @@ def main():
         exit_price = st.number_input("Exit Price", step=0.01, format="%.2f")
         exit_unit = st.number_input("Exit Unit", step=1, min_value=1)
 
-        if st.form_submit_button("Add Trading Data"):
-            cost = price_enter * enter_unit
-            realize_gain_loss = (exit_price * exit_unit) - cost
+        submitted = st.form_submit_button("Add Trading Data")
 
-            new_entry = {
-                "Year": year,
-                "Date": date,
-                "Stock Name": stock_name,
-                "Price Enter": price_enter,
-                "Enter Unit": enter_unit,
-                "Cost": cost,
-                "Exit Date": exit_date,
-                "Exit Price": exit_price,
-                "Exit Unit": exit_unit,
-                "Realize Gain/Loss": realize_gain_loss
-            }
+    # Update DataFrame with new entry
+    if submitted:
+        cost = price_enter * enter_unit
+        realize_gain_loss = (exit_price * exit_unit) - cost
 
-            st.session_state.trading_data = pd.concat([st.session_state.trading_data, pd.DataFrame([new_entry])], ignore_index=True)
+        new_entry = {
+            "Year": year,
+            "Date": date,
+            "Stock Name": stock_name,
+            "Price Enter": price_enter,
+            "Enter Unit": enter_unit,
+            "Cost": cost,
+            "Exit Date": exit_date,
+            "Exit Price": exit_price,
+            "Exit Unit": exit_unit,
+            "Realize Gain/Loss": realize_gain_loss
+        }
+
+        st.session_state.trading_data = st.session_state.trading_data.append(new_entry, ignore_index=True)
 
     # Display the trading data in a table
     st.subheader("Trading Data Table")
     st.dataframe(st.session_state.trading_data.style.hide_index(), width=800)
 
     # Allow user to edit, insert, and remove data
-    with st.expander("Edit / Insert / Remove Data"):
-        selected_row = st.selectbox("Select a row to edit or remove", range(len(st.session_state.trading_data)))
+    selected_row = st.selectbox("Select a row to edit or remove", range(len(st.session_state.trading_data)))
 
-        if st.button("Edit"):
-            # Remaining code for editing a row
+    if st.button("Edit"):
+        # Remaining code for editing a row
 
-        if st.button("Remove"):
-            # Remaining code for removing a row
+    if st.button("Remove"):
+        # Remaining code for removing a row
 
 if __name__ == "__main__":
     main()
