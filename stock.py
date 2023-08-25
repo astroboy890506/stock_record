@@ -64,13 +64,27 @@ def main():
     if len(st.session_state.trading_data) > 0:
         st.dataframe(st.session_state.trading_data, width=800)
 
-    # Perform operations on data
-    if st.button("Edit"):
-        max_index_value = len(st.session_state.trading_data) - 1
-        selected_index = st.number_input("Enter the index to edit", value=0, min_value=0, max_value=max_index_value)
-        if selected_index >= 0 and selected_index < len(st.session_state.trading_data):
-            st.session_state.trading_data.loc[selected_index, "Year"] = st.text_input("Year", st.session_state.trading_data.loc[selected_index, "Year"])
+if st.button("Edit"):
+    max_index_value = len(st.session_state.trading_data) - 1
+    selected_index = st.number_input("Enter the index to edit", value=0, min_value=0, max_value=max_index_value)
+    if selected_index >= 0 and selected_index < len(st.session_state.trading_data):
+        edit_mode = True
+        year_edit = st.text_input("Year", st.session_state.trading_data.loc[selected_index, "Year"])
+        # ... repeat for other columns ...
+
+        confirm_edit = st.button("Confirm Edit")
+        cancel_edit = st.button("Cancel Edit")
+
+        if confirm_edit:
+            st.session_state.trading_data.loc[selected_index, "Year"] = year_edit
             # ... repeat for other columns ...
+            edit_mode = False
+
+        if cancel_edit:
+            edit_mode = False
+
+        if not edit_mode:
+            st.success("Edit complete.")
 
     if st.button("Append"):
         new_entry = {}
