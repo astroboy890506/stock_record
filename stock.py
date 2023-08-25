@@ -60,7 +60,7 @@ def main():
 
     # Display the trading data in a table
     st.subheader("Trading Data Table")
-    st.dataframe(st.session_state.trading_data, index=False)
+    st.dataframe(st.session_state.trading_data)
 
 if __name__ == "__main__":
     main()
