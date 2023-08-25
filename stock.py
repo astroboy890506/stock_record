@@ -65,7 +65,7 @@ def main():
     if len(st.session_state.trading_data) > 0:
         st.dataframe(st.session_state.trading_data, width=800)
 
-if st.button("Edit"):
+    if st.button("Edit"):
     max_index_value = len(st.session_state.trading_data) - 1
     selected_index = st.number_input("Enter the index to edit", value=0, min_value=0, max_value=max_index_value)
     if selected_index >= 0 and selected_index < len(st.session_state.trading_data):
