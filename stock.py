@@ -36,31 +36,65 @@ def main():
         exit_price = st.number_input("Exit Price", step=0.01, format="%.2f")
         exit_unit = st.number_input("Exit Unit", step=1, min_value=1)
 
-        submitted = st.form_submit_button("Add Trading Data")
+        if st.form_submit_button("Add Trading Data"):
+            cost = price_enter * enter_unit
+            realize_gain_loss = (exit_price * exit_unit) - cost
 
-    # Update DataFrame with new entry
-    if submitted:
-        cost = price_enter * enter_unit
-        realize_gain_loss = (exit_price * exit_unit) - cost
+            new_entry = {
+                "Year": year,
+                "Date": date,
+                "Stock Name": stock_name,
+                "Price Enter": price_enter,
+                "Enter Unit": enter_unit,
+                "Cost": cost,
+                "Exit Date": exit_date,
+                "Exit Price": exit_price,
+                "Exit Unit": exit_unit,
+                "Realize Gain/Loss": realize_gain_loss
+            }
 
-        new_entry = {
-            "Year": year,
-            "Date": date,
-            "Stock Name": stock_name,
-            "Price Enter": price_enter,
-            "Enter Unit": enter_unit,
-            "Cost": cost,
-            "Exit Date": exit_date,
-            "Exit Price": exit_price,
-            "Exit Unit": exit_unit,
-            "Realize Gain/Loss": realize_gain_loss
-        }
-
-        st.session_state.trading_data = pd.concat([st.session_state.trading_data, pd.DataFrame([new_entry])], ignore_index=True)
+            st.session_state.trading_data = pd.concat([st.session_state.trading_data, pd.DataFrame([new_entry])], ignore_index=True)
 
     # Display the trading data in a table
     st.subheader("Trading Data Table")
-    st.dataframe(st.session_state.trading_data)
+    st.dataframe(st.session_state.trading_data, index=False)
+
+    # Allow user to edit, insert, and remove data
+    with st.expander("Edit / Insert / Remove Data"):
+        selected_row = st.selectbox("Select a row to edit or remove", range(len(st.session_state.trading_data)))
+
+        if st.button("Edit"):
+            row = st.session_state.trading_data.iloc[selected_row]
+            year = st.text_input("Year of Trading", row["Year"])
+            date = st.date_input("Date", row["Date"])
+            stock_name = st.text_input("Stock Name", row["Stock Name"])
+            price_enter = st.number_input("Price Enter", value=row["Price Enter"], step=0.01, format="%.2f")
+            enter_unit = st.number_input("Enter Unit", value=row["Enter Unit"], step=1, min_value=1)
+            exit_date = st.date_input("Exit Date", row["Exit Date"])
+            exit_price = st.number_input("Exit Price", value=row["Exit Price"], step=0.01, format="%.2f")
+            exit_unit = st.number_input("Exit Unit", value=row["Exit Unit"], step=1, min_value=1)
+
+            if st.button("Save Changes"):
+                cost = price_enter * enter_unit
+                realize_gain_loss = (exit_price * exit_unit) - cost
+
+                edited_entry = {
+                    "Year": year,
+                    "Date": date,
+                    "Stock Name": stock_name,
+                    "Price Enter": price_enter,
+                    "Enter Unit": enter_unit,
+                    "Cost": cost,
+                    "Exit Date": exit_date,
+                    "Exit Price": exit_price,
+                    "Exit Unit": exit_unit,
+                    "Realize Gain/Loss": realize_gain_loss
+                }
+
+                st.session_state.trading_data.iloc[selected_row] = edited_entry
+
+        if st.button("Remove"):
+            st.session_state.trading_data.drop(index=selected_row, inplace=True)
 
 if __name__ == "__main__":
     main()
