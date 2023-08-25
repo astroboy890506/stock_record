@@ -56,7 +56,7 @@ def main():
             "Realize Gain/Loss": realize_gain_loss
         }
 
-        st.session_state.trading_data = st.session_state.trading_data.append(new_entry, ignore_index=True)
+        st.session_state.trading_data = pd.concat([st.session_state.trading_data, pd.DataFrame([new_entry])], ignore_index=True)
 
     # Display the trading data in a table
     st.subheader("Trading Data Table")
