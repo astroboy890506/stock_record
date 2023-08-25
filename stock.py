@@ -68,12 +68,14 @@ def main():
     # Perform operations on data
     if st.button("Edit"):
         st.subheader("Edit Data")
-        selected_index = st.number_input("Enter the index to edit", value=0, min_value=0, max_value=len(st.session_state.trading_data)-1)
+        max_index_value = len(st.session_state.trading_data) - 1
+        selected_index = st.number_input("Enter the index to edit", value=0, min_value=0, max_value=max_index_value)
+
         if selected_index >= 0 and selected_index < len(st.session_state.trading_data):
-            st.write("Current data:")
+            st.write("Data to edit:")
             st.write(st.session_state.trading_data.loc[selected_index])
 
-            st.write("Enter new data:")
+            edit_mode = True
             year_edit = st.text_input("Year", st.session_state.trading_data.loc[selected_index, "Year"])
             date_edit = st.date_input("Date", st.session_state.trading_data.loc[selected_index, "Date"])
             stock_name_edit = st.text_input("Stock Name", st.session_state.trading_data.loc[selected_index, "Stock Name"])
@@ -95,10 +97,14 @@ def main():
                 st.session_state.trading_data.loc[selected_index, "Exit Date"] = exit_date_edit
                 st.session_state.trading_data.loc[selected_index, "Exit Price"] = exit_price_edit
                 st.session_state.trading_data.loc[selected_index, "Exit Unit"] = exit_unit_edit
+                edit_mode = False
+                
+            if cancel_edit:
+                edit_mode = False
 
-            if confirm_edit or cancel_edit:
-                st.write("Edit complete.")
-
+            if not edit_mode:
+                st.success("Edit complete.")
+                
     if st.button("Append"):
         st.subheader("Append Data")
         new_entry = {}
