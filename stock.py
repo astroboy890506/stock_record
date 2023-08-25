@@ -56,22 +56,11 @@ def main():
             "Realize Gain/Loss": realize_gain_loss
         }
 
-        st.session_state.trading_data = st.session_state.trading_data.append(new_entry, ignore_index=True)
+        st.session_state.trading_data = pd.concat([st.session_state.trading_data, pd.DataFrame([new_entry])], ignore_index=True)
 
     # Display the trading data in a table
     st.subheader("Trading Data Table")
     st.dataframe(st.session_state.trading_data.style.hide_index(), width=800)
-
-    # Allow user to edit, insert, and remove data
-    selected_row = st.selectbox("Select a row to edit or remove", range(len(st.session_state.trading_data)))
-
-    if st.button("Edit"):
-        # Insert code for editing a row
-        pass
-
-    if st.button("Remove"):
-        # Insert code for removing a row
-        pass
 
 if __name__ == "__main__":
     main()
