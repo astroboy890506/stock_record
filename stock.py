@@ -7,7 +7,7 @@ def calculate_realize_gain_loss(row):
 def main():
     st.set_page_config(
         page_title="Trading Data App",
-        page_icon="??",
+        page_icon="💹",
         layout="wide"
     )
 
@@ -36,10 +36,10 @@ def main():
         exit_price = st.number_input("Exit Price", step=0.01, format="%.2f")
         exit_unit = st.number_input("Exit Unit", step=1, min_value=1)
 
-        st.form_submit_button("Add Trading Data")
+        submitted = st.form_submit_button("Add Trading Data")
 
     # Update DataFrame with new entry
-    if st.session_state.trading_form.submitted:
+    if submitted:
         cost = price_enter * enter_unit
         realize_gain_loss = (exit_price * exit_unit) - cost
 
