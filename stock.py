@@ -113,3 +113,28 @@ def main():
         new_entry["Cost"] = new_entry["Price Enter"] * new_entry["Enter Unit"]
         new_entry["Realize Gain/Loss"] = (new_entry["Exit Price"] * new_entry["Exit Unit"]) - new_entry["Cost"]
         st.session_state.trading
+
+        new_entry["Realize Gain/Loss"] = (new_entry["Exit Price"] * new_entry["Exit Unit"]) - new_entry["Cost"]
+        st.session_state.trading_data = pd.concat([st.session_state.trading_data, pd.DataFrame([new_entry])], ignore_index=True)
+        st.write("Data appended.")
+
+    if st.button("Remove"):
+        st.subheader("Remove Data")
+        selected_index = st.number_input("Enter the index to remove", value=0, min_value=0, max_value=len(st.session_state.trading_data)-1)
+        if selected_index >= 0 and selected_index < len(st.session_state.trading_data):
+            st.write("Data to remove:")
+            st.write(st.session_state.trading_data.loc[selected_index])
+
+            confirm_remove = st.button("Confirm Remove")
+            cancel_remove = st.button("Cancel Remove")
+
+            if confirm_remove:
+                st.session_state.trading_data.drop(selected_index, inplace=True)
+                st.session_state.trading_data.reset_index(drop=True, inplace=True)
+                st.write("Data removed.")
+
+            if confirm_remove or cancel_remove:
+                st.write("Removal process complete.")
+
+if __name__ == "__main__":
+    main()
