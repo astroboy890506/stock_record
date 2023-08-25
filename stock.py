@@ -66,10 +66,12 @@ def main():
     selected_row = st.selectbox("Select a row to edit or remove", range(len(st.session_state.trading_data)))
 
     if st.button("Edit"):
-        # Remaining code for editing a row
+        # Insert code for editing a row
+        pass
 
     if st.button("Remove"):
-        # Remaining code for removing a row
+        # Insert code for removing a row
+        pass
 
 if __name__ == "__main__":
     main()
