@@ -4,13 +4,14 @@ import pandas as pd
 def calculate_realize_gain_loss(row):
     return (row["exit_price"] * row["exit_unit"]) - row["cost"]
 
-def main():
-    st.set_page_config(
-        page_title="Trading Data App",
-        page_icon="💹",
-        layout="wide"
-    )
+# Call set_page_config first
+st.set_page_config(
+    page_title="Trading Data App",
+    page_icon="💹",
+    layout="wide"
+)
 
+def main():
     st.title("Trading Data Entry and Analysis")
 
     # Create or load trading data DataFrame
