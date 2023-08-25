@@ -23,15 +23,44 @@ def main():
 
     # Input form for trading data
     with st.form("trading_form"):
-        # ... (your input form code)
+        col1, col2, col3 = st.columns(3)
+
+        year = col1.text_input("Year of Trading")
+        date = col2.date_input("Date")
+        stock_name = col3.text_input("Stock Name")
+
+        price_enter = st.number_input("Price Enter", step=0.01, format="%.2f")
+        enter_unit = st.number_input("Enter Unit", step=1, min_value=1)
+
+        exit_date = st.date_input("Exit Date")
+        exit_price = st.number_input("Exit Price", step=0.01, format="%.2f")
+        exit_unit = st.number_input("Exit Unit", step=1, min_value=1)
+
+        submitted = st.form_submit_button("Add Trading Data")
 
     # Update DataFrame with new entry
-    if st.form_submit_button("Add Trading Data"):
-        # ... (your data appending code)
+    if submitted:
+        cost = price_enter * enter_unit
+        realize_gain_loss = (exit_price * exit_unit) - cost
+
+        new_entry = {
+            "Year": year,
+            "Date": date,
+            "Stock Name": stock_name,
+            "Price Enter": price_enter,
+            "Enter Unit": enter_unit,
+            "Cost": cost,
+            "Exit Date": exit_date,
+            "Exit Price": exit_price,
+            "Exit Unit": exit_unit,
+            "Realize Gain/Loss": realize_gain_loss
+        }
+
+        st.session_state.trading_data = st.session_state.trading_data.append(new_entry, ignore_index=True)
 
     # Display the trading data in a table
     st.subheader("Trading Data Table")
-    st.dataframe(st.session_state.trading_data)  # Removed index=False
+    st.dataframe(st.session_state.trading_data, index=False)
 
 if __name__ == "__main__":
     main()
